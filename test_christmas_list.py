@@ -211,3 +211,70 @@ def describe_remove():
         list.remove("FPV Drone")
 
         assert list.loadItems() == []
+
+def describe_print_list():
+
+    def it_prints_off_item_correctly(capsys, real_item_file):
+        list = ChristmasList(real_item_file)
+        list.print_list()
+
+        captured = capsys.readouterr()
+        assert captured.out == "[_] FPV Drone\n"
+    
+    def it_prints_off_checked_item_correctly(capsys, real_item_file):
+        list = ChristmasList(real_item_file)
+        list.check_off("FPV Drone")
+        list.print_list()
+
+        captured = capsys.readouterr()
+        assert captured.out == "[x] FPV Drone\n"
+
+    def it_prints_off_multiple_items_correctly(capsys, real_item_file):
+        list = ChristmasList(real_item_file)
+        list.add("Foundry")
+        list.print_list()
+
+        captured = capsys.readouterr()
+        assert captured.out == "[_] FPV Drone\n[_] Foundry\n"
+
+    def it_prints_off_multiple_checked_items_correctly(capsys, real_item_file):
+        list = ChristmasList(real_item_file)
+        list.add("Foundry")
+        list.check_off("FPV Drone")
+        list.check_off("Foundry")
+        list.print_list()
+
+        captured = capsys.readouterr()
+        assert captured.out == "[x] FPV Drone\n[x] Foundry\n"
+
+    def it_prints_off_item_with_no_name(capsys, test_file):
+        list = ChristmasList(test_file)
+        list.add("")
+
+        assert list.loadItems() == [{"name": "", "purchased": False}]
+
+        list.print_list()
+        captured = capsys.readouterr()
+        assert captured.out == "[_] \n" 
+
+    def it_prints_off_item_with_no_name_when_checked(capsys, test_file):
+        list = ChristmasList(test_file)
+        list.add("")
+
+        assert list.loadItems() == [{"name": "", "purchased": False}]
+        list.check_off("")
+
+        list.print_list()
+        captured = capsys.readouterr()
+        assert captured.out == "[x] \n"
+
+    def it_prints_off_item_with_no_name_with_another_item(capsys, test_file):
+        list = ChristmasList(test_file)
+        list.add("")
+        list.add("AnotherItem")
+
+        assert list.loadItems() == [{"name": "", "purchased": False}, {"name": "AnotherItem", "purchased": False}]
+
+        list.print_list()
+        captured = capsys.readouterr()
+        assert captured.out == "[_] \n[_] AnotherItem\n"
