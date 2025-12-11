@@ -23,7 +23,6 @@ jobs:
           pip install pytest
           pip install pytest-describe
           pip install pytest-spec
-          pip install pytest-mocker
 
       - name: Run system tests
         run: |
